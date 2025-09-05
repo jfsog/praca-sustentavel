@@ -69,7 +69,7 @@ public class WordCloudService {
         // Converte para lista ordenada
         return wordCount.entrySet()
                 .stream()
-                .map(entry -> new WordCount(entry.getKey(), entry.getValue()))
+                .map(entry -> WordCount.builder().count(entry.getValue()).word(entry.getKey()).build())
                 .sorted((a, b) -> Integer.compare(b.getCount(), a.getCount()))
                 .limit(30)
                 .collect(Collectors.toList());
