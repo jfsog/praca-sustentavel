@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pracasustentavel.praca_sustentavel.api.entity.SurveyResponse;
+import com.pracasustentavel.praca_sustentavel.api.entity.SurveyResponseDTO;
 import com.pracasustentavel.praca_sustentavel.api.service.SurveyService;
 
 @RestController
@@ -22,7 +23,7 @@ public class SurveyController {
     private SurveyService surveyService;
 
     @PostMapping("/responses")
-    public ResponseEntity<?> saveResponse(@RequestBody SurveyResponse response) {
+    public ResponseEntity<?> saveResponse(@RequestBody SurveyResponseDTO response) {
         try {
             SurveyResponse savedResponse = surveyService.saveResponse(response);
             return ResponseEntity.ok(savedResponse);
