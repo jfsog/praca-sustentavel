@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Praça Sustentável - Sua Opinião Importa</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.min.js"></script>
+    <style>
+        :root {
+            --primary: #2E8B57;
+            --secondary: #8FBC8F;
+            --accent: #FFD700;
+            --light: #F5F5F5;
+            --dark: #2F4F4F;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        h1, h2, h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, textarea, select {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--secondary);
+        }
+
+        .wordcloud-container {
+            height: 300px;
+            position: relative;
+            margin: 1rem 0;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            background: #f0f0f0;
+            border-radius: 5px 5px 0 0;
+            margin-right: 0.5rem;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(to bottom right, var(--secondary), var(--primary));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .eco-tip {
+            background-color: #E8F5E9;
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="logo">
+        <span class="logo-icon">🌿</span>
+        <h1>Praça Sustentável</h1>
+    </div>
+    <p>Sua opinião para preservar os espaços públicos da nossa cidade</p>
+</header>
+
+<div class="container">
+    <section class="intro">
+        <h2>Participe da Transformação da Nossa Praça</h2>
+        <p>Este projeto visa coletar opiniões dos cidadãos sobre a preservação e melhoria da praça central da nossa cidade. Sua contribuição é essencial para criarmos um espaço mais verde, sustentável e agradável para todos.</p>
+
+        <div class="eco-tip">
+            <strong>Dica Sustentável:</strong> Espaços públicos bem cuidados aumentam a qualidade de vida e promovem a socialização entre os cidadãos.
+        </div>
+    </section>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Responda o Questionário</h2>
+            <form id="survey-form">
+                <div class="form-group">
+                    <label for="age">Idade:</label>
+                    <input type="number" id="age" min="1" max="120" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="neighborhood">Bairro onde mora:</label>
+                    <input type="text" id="neighborhood" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="frequency">Com que frequência visita a praça?</label>
+                    <select id="frequency" required>
+                        <option value="">Selecione...</option>
+                        <option value="DIARIAMENTE">Diariamente</option>
+                        <option value="SEMANALMENTE">Semanalmente</option>
+                        <option value="MENSALMENTE">Mensalmente</option>
+                        <option value="RARAMENTE">Raramente</option>
+                        <option value="NUNCA">Nunca</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="improvement">O que mais precisa ser melhorado na praça?</label>
+                    <textarea id="improvement" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="activities">Que atividades gostaria de ver na praça?</label>
+                    <textarea id="activities" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="sustainability">Como podemos tornar a praça mais sustentável?</label>
+                    <textarea id="sustainability" rows="3" required></textarea>
+                </div>
+
+                <button type="submit">Enviar Respostas</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Nuvens de Palavras</h2>
+            <p>Visualização das respostas mais frequentes da comunidade:</p>
+
+            <div class="tabs">
+                <div class="tab active" data-tab="improvement">Melhorias</div>
+                <div class="tab" data-tab="activities">Atividades</div>
+                <div class="tab" data-tab="sustainability">Sustentabilidade</div>
+            </div>
+
+            <div class="tab-content active" id="improvement-tab">
+                <div class="wordcloud-container">
+                    <canvas id="wordcloud-improvement" width="600" height="300"></canvas>
+                </div>
+            </div>
+
+            <div class="tab-content" id="activities-tab">
+                <div class="wordcloud-container">
+                    <canvas id="wordcloud-activities" width="600" height="300"></canvas>
+                </div>
+            </div>
+
+            <div class="tab-content" id="sustainability-tab">
+                <div class="wordcloud-container">
+                    <canvas id="wordcloud-sustainability" width="600" height="300"></canvas>
+                </div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-responses">0</div>
+                    <div class="stat-label">Respostas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="participants">0</div>
+                    <div class="stat-label">Participantes</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>Projeto de Economia Sustentável - Desenvolvido para a comunidade</p>
+    <p>💚 Ajude a preservar os espaços públicos da nossa cidade</p>
+</footer>
+
+<script>
+    const API_BASE_URL = 'http://18.217.86.171:8080/api';
+
+    // Elementos do DOM
+    const surveyForm = document.getElementById('survey-form');
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    // Gerar cor aleatória (para as palavras)
+    function getRandomColor() {
+        const colors = ['#2E8B57', '#8FBC8F', '#3CB371', '#20B2AA', '#32CD32', '#7CFC00', '#00FA9A', '#00FF7F'];
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    // Sistema de abas
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabId = tab.getAttribute('data-tab');
+
+            // Remover classe active de todas as abas e conteúdos
+            tabs.forEach(t => t.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+
+            // Adicionar classe active à aba clicada e ao conteúdo correspondente
+            tab.classList.add('active');
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+        });
+    });
+
+    // Envio do formulário
+    surveyForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = {
+            age: document.getElementById('age').value,
+            neighborhood: document.getElementById('neighborhood').value,
+            frequency: document.getElementById('frequency').value,
+            improvement: document.getElementById('improvement').value,
+            activities: document.getElementById('activities').value,
+            sustainability: document.getElementById('sustainability').value,
+        };
+
+        try {
+            // Em produção, descomente e use esta chamada para o backend real
+
+            const response = await fetch(`${API_BASE_URL}/responses`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                alert('Obrigado por sua contribuição! Sua resposta foi registrada.');
+                surveyForm.reset();
+                // Recarregar as nuvens de palavras após envio bem-sucedido
+                await loadWordClouds();
+            } else {
+                throw new Error('Erro ao enviar resposta');
+            }
+
+
+            // Simulação de sucesso (remover em produção)
+            alert('Obrigado por sua contribuição! Sua resposta foi registrada.');
+            surveyForm.reset();
+
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Desculpe, ocorreu um erro ao enviar suas respostas. Tente novamente.');
+        }
+    });
+
+    // Carregar nuvens de palavras do backend
+    async function loadWordClouds() {
+        try {
+            const [improvementRes, activitiesRes, sustainabilityRes, statsRes] = await Promise.all([
+                fetch(`${API_BASE_URL}/wordcloud/improvement`),
+                fetch(`${API_BASE_URL}/wordcloud/activities`),
+                fetch(`${API_BASE_URL}/wordcloud/sustainability`),
+                fetch(`${API_BASE_URL}/stats`)
+            ]);
+
+            const improvementData = await improvementRes.json();
+            const activitiesData = await activitiesRes.json();
+            const sustainabilityData = await sustainabilityRes.json();
+            const statsData = await statsRes.json();
+            const createWordCloud = function(elementId, apiData){
+                WordCloud(document.getElementById(elementId), {
+                    list: apiData.map(item => [item.word, item.count]),
+                    gridSize: Math.round(16 * document.getElementById(elementId).width / 1024),
+                    weightFactor: function(size) {
+                        return Math.pow(size, 2.3) * document.getElementById(elementId).width / 100;
+                    },
+                    fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif',
+                    color: function() {
+                        return getRandomColor();
+                    },
+                    rotateRatio: 0.5,
+                    rotationSteps: 2,
+                    backgroundColor: '#ffffff'
+                });
+            }
+            // Nuvem de palavras para Melhorias
+            createWordCloud('wordcloud-improvement', improvementData);
+            // Nuvem de palavras para Atividades
+            createWordCloud('wordcloud-activities', activitiesData);
+            // Nuvem de palavras para Sustentabilidade
+            createWordCloud('wordcloud-sustainability', sustainabilityData);
+
+            // Atualizar estatísticas
+            document.getElementById('total-responses').textContent = statsData.totalResponses;
+            document.getElementById('participants').textContent = statsData.participants;
+        } catch (error) {
+            console.error('Erro ao carregar nuvens de palavras:', error);
+        }
+    }
+
+    // Inicializar a aplicação
+    window.addEventListener('load', () => {
+        loadWordClouds(); // Descomente em produção para carregar dados reais
+    });
+</script>
+</body>
+</html>
