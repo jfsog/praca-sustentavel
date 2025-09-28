@@ -407,8 +407,8 @@
                 WordCloud(document.getElementById(elementId), {
                     list: apiData.map(item => [item.word, item.count]),
                     gridSize: Math.round(16 * document.getElementById(elementId).width / 1024),
-                    weightFactor: function(size) {
-                        return Math.pow(size, 2.3) * document.getElementById(elementId).width / 100;
+                    weightFactor:function(size) {
+                        return Math.pow(size, 2.3) * document.getElementById(elementId).width / 10;
                     },
                     fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif',
                     color: function() {
@@ -436,7 +436,7 @@
 
     // Inicializar a aplicação
     window.addEventListener('load', () => {
-        loadWordClouds(); // Descomente em produção para carregar dados reais
+        loadWordClouds();
     });
 </script>
 </body>
